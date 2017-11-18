@@ -4,6 +4,7 @@
   "description": "Crypto Currency Portfolio Analysis",
   "main": "main.js",
   "dependencies": {
+    "angular": "^1.6.6",
     "electron": "^1.7.9"
   },
   "devDependencies": {},

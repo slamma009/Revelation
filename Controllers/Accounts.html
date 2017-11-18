@@ -1,3 +1,33 @@
 <div>
-    Test
+    <h4 style='display:inline'>Manual Wallets</h4>
+    <span class='glyphicon glyphicon-plus glyph-btn' ng-click="addManualWallet()" style='color:#80c185'></span>
+    <span class='glyphicon glyphicon-floppy-disk glyph-btn' ng-if='changed' ng-click="saveManualWallets()" style='color:#7eb8f7'></span>
+    <table>
+        <thead>
+            <tr>
+                <td style='padding: 5 15 5 15'>Ticker</td>
+                <td style='padding: 5 15 5 15'>Quantity</td>
+                <td style='padding: 5 15 5 15'>Description</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody ng-repeat='wallet in manualWallets track by $index'>
+            <tr>
+                <td style='padding: 5 15 5 15'>
+                    <input type='text' ng-model='wallet.Ticker' style='width:70px' ng-change='change()'/>
+                </td>
+                <td style='padding: 5 15 5 15'>
+                    <input type='number' ng-model='wallet.Quantity' style='width:140px' ng-change='change()'/>
+                </td>
+                <td style='padding: 5 15 5 15'>
+                    <input type='text' ng-model='wallet.Description' ng-change='change()'/>
+                </td>
+                <td style='color:#7b3f3f'>
+                    <div class='glyph-btn' ng-click='deleteManualWallet($index)'>
+                        <span class='glyphicon glyphicon-trash' style='display:inline;'></span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

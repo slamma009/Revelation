@@ -1,7 +1,36 @@
 <div>
+    <h4 style='display:inline'>Bittrex Accounts</h4>
+    <span class='glyphicon glyphicon-floppy-disk glyph-btn' ng-if='bittrexChanged' ng-click="saveSettings()" style='color:#7eb8f7'></span>
+    
+
+    <div class='row'>
+        <div class='col-xs-5'>
+            <input ng-model='newBittrex.API' placeholder=' API Key' type='text' style='width:100%'>
+        </div>
+        <div class='col-xs-5'>
+            <input ng-model='newBittrex.Secret' placeholder=' Secret Key'  type='password' style='width:100%'>
+        </div>
+        <div class='col-xs-2'>
+            <span class='glyphicon glyphicon-plus glyph-btn' ng-click="addBittrexAccount()" style='color:#80c185'></span>
+        </div>
+    </div>
+    <table ng-repeat='account in bittrexAccounts track by $index'>
+        <tr>
+            <td style='padding: 5 15 5 15'>
+                <div>{{account.API}}</div>
+            </td>
+            <td style='color:#7b3f3f'>
+                <div class='glyph-btn' ng-click='deleteBittrex($index)'>
+                    <span class='glyphicon glyphicon-trash' style='display:inline;'></span>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <br />
     <h4 style='display:inline'>Manual Wallets</h4>
     <span class='glyphicon glyphicon-plus glyph-btn' ng-click="addManualWallet()" style='color:#80c185'></span>
-    <span class='glyphicon glyphicon-floppy-disk glyph-btn' ng-if='changed' ng-click="saveManualWallets()" style='color:#7eb8f7'></span>
+    <span class='glyphicon glyphicon-floppy-disk glyph-btn' ng-if='changed' ng-click="saveSettings()" style='color:#7eb8f7'></span>
     <table>
         <thead>
             <tr>

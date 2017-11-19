@@ -4,7 +4,8 @@ function hasKey(arr, key){
     return arr[key] !== undefined;
 }
 
-function webCall(url, account){
+function bittrexCall(url, account){
+    url = 'https://bittrex.com/api/v1.1/' + url;
     var startChar = '?';
     if(url.includes('?'))
         startChar = '&';
@@ -30,8 +31,32 @@ function webCall(url, account){
     });
 }
 
+function cryptoCompareCall(url){
+    url = 'https://min-api.cryptocompare.com/data/' + url;
+    
+    return $.ajax({
+        type: 'GET',
+        url: url,
+        dataType: 'json',
+        success: function(response) {
+            return response;
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
 function checkLogin(successFunction, account){
-    webCall('https://bittrex.com/api/v1.1/account/getbalances', account).then(function(d){
+    getWalletsFromAPI(account).then(function(d){
         successFunction(d.success);
     });
+}
+
+function getWalletsFromAPI(account) {
+    return bittrexCall('account/getbalances', account);
+}
+
+function getMarketSummariesFromAPI(account) {
+    return bittrexCall('public/getmarketsummaries ', undefined);
 }

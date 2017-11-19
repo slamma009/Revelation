@@ -15,6 +15,7 @@
         <script src='Global.js'></script>
         <script src='AngularMain.js'></script>
         <script src='Controllers/Accounts.js'></script>
+        <script src='Controllers/Statistics.js'></script>
         
         <!-- Insert this line after script imports -->
         <script>if (window.module) module = window.module;</script>
@@ -29,15 +30,20 @@
                     </div>
                 </div>
                 <br/>
-                <div class='button' ng-class="{'selected': selected==='portfolio'}" ng-click='selected="portfolio"'> 
-                    Portfolio
+                <div class='button' ng-class="{'selected': selected==='statistics'}" ng-click='selected="statistics"'> 
+                    Statistics
                 </div>
                 <div class='button' ng-class="{'selected': selected==='accounts'}" ng-click='selected="accounts"'>
                     Accounts
                 </div>
             </div>
             <div class='col-xs-9 page-container'>
-                <div ng-show="selected==='portfolio'"></div>
+                <div ng-show="selected==='statistics'" statistics wallet-holder='walletHolder'></div>
+                <div ng-show="selected==='portfolio'">
+                    <div ng-repeat='ticker in walletHolder.allTickers'>
+                        {{ticker}} - {{walletHolder[ticker].usdValue}}
+                    </div>
+                </div>
                 <div ng-show="selected==='accounts'" account-settings accounts='accounts'></div>
             </div>
         </div>

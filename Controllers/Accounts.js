@@ -45,26 +45,23 @@ function accountsController($scope){
 
   // Bittrex Accounts \\
 
+  // Adds a new bittrex account if API is valid
   $scope.addBittrexAccount = function(){
     checkLogin(function (success){ 
       if(success){
-        $scope.addNewBittrex();
+        if($scope.bittrexAccounts === undefined){
+          $scope.bittrexAccounts = [];
+        }
+        $scope.bittrexAccounts.push(angular.copy($scope.newBittrex));
+        $scope.newBittrex = {};
+        $scope.change('bittrex');
       } else {
         alert('Invalid API key');
       }
     }, $scope.newBittrex);
   };
 
-  $scope.addNewBittrex = function(){
-      if($scope.bittrexAccounts === undefined){
-        $scope.bittrexAccounts = [];
-      }
-      $scope.bittrexAccounts.push(angular.copy($scope.newBittrex));
-      console.log($scope.bittrexAccounts);
-      $scope.newBittrex = {};
-      $scope.change('bittrex');
-  };
-
+  // Deletes the row from the bittrex account list
   $scope.deleteBittrex = function (index){
     $scope.bittrexAccounts.splice(index, 1);
     $scope.change('bittrex');

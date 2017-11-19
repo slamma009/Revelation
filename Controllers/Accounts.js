@@ -15,7 +15,6 @@ angular.module('revelation')
 function accountsController($scope){
   $scope.changed = false;
   $scope.bittrexChanged = false;
-
   // Watch for the manual wallets to change from main to get the wallet list
   $scope.$watch('accounts.manualWallets', function(d){
     $scope.manualWallets = $scope.accounts.manualWallets;
@@ -47,12 +46,23 @@ function accountsController($scope){
   // Bittrex Accounts \\
 
   $scope.addBittrexAccount = function(){
-    if($scope.bittrexAccounts === undefined){
-      $scope.bittrexAccounts = [];
-    }
-    $scope.bittrexAccounts.push(angular.copy($scope.newBittrex));
-    $scope.newBittrex = {};
-    $scope.change('bittrex');
+    checkLogin(function (success){ 
+      if(success){
+        $scope.addNewBittrex();
+      } else {
+        alert('Invalid API key');
+      }
+    }, $scope.newBittrex);
+  };
+
+  $scope.addNewBittrex = function(){
+      if($scope.bittrexAccounts === undefined){
+        $scope.bittrexAccounts = [];
+      }
+      $scope.bittrexAccounts.push(angular.copy($scope.newBittrex));
+      console.log($scope.bittrexAccounts);
+      $scope.newBittrex = {};
+      $scope.change('bittrex');
   };
 
   $scope.deleteBittrex = function (index){

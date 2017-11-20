@@ -1,3 +1,66 @@
 <div>
-    <p>Statistics</p>
+    <div class='statistic-card'>
+        <h4>Most Valuable Coins</h4>
+        <div ng-repeat='coin in MostValuableCoins track by $index'>
+            <div class='row'>
+                <div class='col-xs-2'>
+                    {{$index + 1}}.
+                </div>
+                <div class='col-xs-4'>
+                    {{coin.ticker}} 
+                </div>
+                <div class='col-xs-6'>
+                    ${{coin.wallet.usdValue}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='statistic-card'>
+        <h4>Top Gains Day</h4>
+        <div ng-repeat='coin in DailyGains track by $index'>
+            <div class='row'>
+                <div class='col-xs-2'>
+                    {{$index + 1}}.
+                </div>
+                <div class='col-xs-4'>
+                    {{coin.ticker}} 
+                </div>
+                <div class='col-xs-6' ng-class="{'muted-green': coin.dailyGain > 0, 'muted-red': coin.dailyGain < 0}">
+                    {{coin.dailyGain}}%
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='statistic-card'>
+        <h4>Top Gains Week</h4>
+        <div ng-repeat='coin in WeeklyGains track by $index'>
+            <div class='row'>
+                <div class='col-xs-2'>
+                    {{$index + 1}}.
+                </div>
+                <div class='col-xs-4'>
+                    {{coin.ticker}} 
+                </div>
+                <div class='col-xs-6' ng-class="{'muted-green': coin.weeklyGain > 0, 'muted-red': coin.weeklyGain < 0}">
+                    {{coin.weeklyGain}}%
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='statistic-card'>
+        <h4>Top Gains Monthly</h4>
+        <div ng-repeat='coin in MonthlyGains track by $index'>
+            <div class='row'>
+                <div class='col-xs-2'>
+                    {{$index + 1}}.
+                </div>
+                <div class='col-xs-4'>
+                    {{coin.ticker}} 
+                </div>
+                <div class='col-xs-6' ng-class="{'muted-green': coin.monthlyGain > 0, 'muted-red': coin.monthlyGain < 0}">
+                    {{coin.monthlyGain}}%
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -11,7 +11,7 @@ function bittrexCall(url, account){
         startChar = '&';
     var secret = ''
     if(account !== undefined){
-        var nonce = Math.round((new Date()).getTime() / 1000);
+        var nonce = Math.round(dateToTimestamp(new Date()));
         url += startChar + 'apikey=' + account.API + '&nonce=' + nonce;
         secret = CryptoJS.HmacSHA512(url, account.Secret).toString(CryptoJS.enc.Hex);
     }
@@ -59,4 +59,8 @@ function getWalletsFromAPI(account) {
 
 function getMarketSummariesFromAPI(account) {
     return bittrexCall('public/getmarketsummaries ', undefined);
+}
+
+function dateToTimestamp(date){
+    return Math.round(date.getTime() / 1000);
 }

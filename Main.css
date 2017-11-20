@@ -64,3 +64,26 @@ html, body {
 input {
     background-color:#474c52;
 }
+
+.statistic-card {
+    background-color:#33464f; 
+    margin: 5 5 5 5; 
+    padding: 0 10 10 10; 
+    border-radius:10px; 
+    display:inline-block;
+    color: #b4b4b4;
+}
+
+.statistic-card h4 {
+    color:#fff;
+    width:100%;
+    text-align:center;
+}
+
+.muted-green {
+    color:#50c35a;
+}
+
+.muted-red {
+    color:#c35252;
+}

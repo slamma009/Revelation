@@ -2,7 +2,7 @@ var app = angular.module('revelation', []);
 
 app.controller('mainController', function ($scope){
     var loadedAccounts = 0;
-    $scope.selected = 'statistics';
+    $scope.selected = 'portfolio';
     $scope.usdValue = 0;
     $scope.walletHolder = {};
     

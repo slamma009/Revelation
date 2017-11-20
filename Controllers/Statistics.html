@@ -1,4 +1,4 @@
-<div>
+<div style='text-align: center;'>
     <div class='statistic-card'>
         <h4>Most Valuable Coins</h4>
         <div ng-repeat='coin in MostValuableCoins track by $index'>
@@ -10,7 +10,7 @@
                     {{coin.ticker}} 
                 </div>
                 <div class='col-xs-6'>
-                    ${{coin.wallet.usdValue}}
+                    $ {{coin.wallet.usdValue}}
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
                     {{coin.ticker}} 
                 </div>
                 <div class='col-xs-6' ng-class="{'muted-green': coin.dailyGain > 0, 'muted-red': coin.dailyGain < 0}">
-                    {{coin.dailyGain}}%
+                    {{coin.dailyGain}} %
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
                     {{coin.ticker}} 
                 </div>
                 <div class='col-xs-6' ng-class="{'muted-green': coin.weeklyGain > 0, 'muted-red': coin.weeklyGain < 0}">
-                    {{coin.weeklyGain}}%
+                    {{coin.weeklyGain}} %
                 </div>
             </div>
         </div>
@@ -58,7 +58,7 @@
                     {{coin.ticker}} 
                 </div>
                 <div class='col-xs-6' ng-class="{'muted-green': coin.monthlyGain > 0, 'muted-red': coin.monthlyGain < 0}">
-                    {{coin.monthlyGain}}%
+                    {{coin.monthlyGain}} %
                 </div>
             </div>
         </div>

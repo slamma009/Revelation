@@ -10,6 +10,11 @@ app.controller('mainController', function ($scope){
         var item = JSON.parse(localStorage.getItem('accountInfo'));
         if(item !== undefined && item !== null){
             $scope.accounts = item;
+        } else {
+        	item = {};
+        	item.manualWallets = [];
+        	item.bittrexAccounts = [];
+        	$scope.accounts = item;
         }
     }
     
@@ -83,7 +88,7 @@ app.controller('mainController', function ($scope){
                     if($scope.walletHolder.allTickers[j] !== 'BTC'){
                         $scope.walletHolder[$scope.walletHolder.allTickers[j]].usdValue = Math.round($scope.walletHolder[$scope.walletHolder.allTickers[j]].btcValue * btcValue * 100) / 100;
                         $scope.walletHolder[$scope.walletHolder.allTickers[j]].usdMarketValue = Math.round($scope.walletHolder[$scope.walletHolder.allTickers[j]].btcMarketValue * btcValue * 100) / 100;
-                        if($scope.walletHolder[$scope.walletHolder.allTickers[j]].usdValue < 5)
+                        if($scope.walletHolder[$scope.walletHolder.allTickers[j]].usdValue < 0.5)
                         {
                             $scope.walletHolder[$scope.walletHolder.allTickers[j]] = undefined;
                             tickersToRemove.push(j);

@@ -21,6 +21,7 @@ function portfolioController($scope){
             }]
         },
         options: {
+            animation : false,  
             legend: {
                 display: false
             }

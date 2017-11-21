@@ -55,13 +55,9 @@ function portfolioController($scope){
             $scope.rainbow[i] = "#"+ red + green + blue;
             }
             
-function shadeColor2(color, percent) {   
-    var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
-    return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
-}
             function sin_to_hex(i, phase) {
             var sin = Math.sin(Math.PI / holder.allTickers.length * 2 * i + phase);
-            var int = Math.floor((Math.floor(sin * 127) + 128) * 0.7); // Multiply by 0.7 to make the colors darker.
+            var int = Math.floor((Math.floor(sin * 127) + 128) * 1); // Multiply by 0.7 to make the colors darker.
             var hex = int.toString(16);
             
             return hex.length === 1 ? "0"+hex : hex;

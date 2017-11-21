@@ -32,6 +32,7 @@ function accountsController($scope){
   $scope.change = function(section){
     if(section === 'bittrex'){
       $scope.bittrexChanged = true;
+      $scope.$apply();
     } else {
       $scope.changed=true;
     }

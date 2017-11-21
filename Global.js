@@ -64,3 +64,5 @@ function getMarketSummariesFromAPI(account) {
 function dateToTimestamp(date){
     return Math.round(date.getTime() / 1000);
 }
+
+var numOfDecimalsToShow = 8;

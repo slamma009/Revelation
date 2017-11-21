@@ -6,6 +6,7 @@
 
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        
         <link rel="stylesheet" type="text/css" href="Main.css">
 
         <!-- Latest compiled and minified JavaScript -->
@@ -19,6 +20,7 @@
         <script src='Controllers/Accounts.js'></script>
         <script src='Controllers/Statistics.js'></script>
         <script src='Controllers/Portfolio.js'></script>
+        <script src='Controllers/Settings.js'></script>
         <!-- Insert this line after script imports -->
         <script>if (window.module) module = window.module;</script>
     </head>
@@ -32,8 +34,11 @@
                         </div>
                     </div>
                     <b>Revelation</b> <br/>
-                    <div class='display'>
-                        $<span style='font-size:15px; color:#fff;' id='usdDisplay'>{{usdValue}}</span> USD
+                    <div class='display' ng-if='tickerToShow === "USD"'>
+                        <span style='font-size:15px; color:#fff;' id='usdDisplay'>{{usdValue}}</span> USD
+                    </div>
+                    <div class='display' ng-if='tickerToShow === "BTC"'>
+                        <span style='font-size:15px; color:#fff;' id='usdDisplay'>{{btcValueRounded}}</span> BTC
                     </div>
                 </div>
                 <br/>
@@ -46,11 +51,15 @@
                 <div class='button' ng-class="{'selected': selected==='accounts'}" ng-click='selected="accounts"'>
                     Accounts
                 </div>
+                <div class='button' ng-class="{'selected': selected==='settings'}" ng-click='selected="settings"'>
+                    Settings
+                </div>
             </div>
             <div class='col-xs-8 col-sm-9 col-md-10 col-lg-10 page-container'>
                 <div ng-show="selected==='statistics'" statistics wallet-holder='walletHolder'></div>
                 <div ng-show="selected==='portfolio'" portfolio wallet-holder='walletHolder' style='height:90%;align-items: center;display: flex;justify-content: center;'></div>
                 <div ng-show="selected==='accounts'" account-settings accounts='accounts'></div>
+                <div ng-show="selected==='settings'" global-settings></div>
             </div>
         </div>
     </body>

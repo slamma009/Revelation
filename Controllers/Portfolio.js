@@ -9,7 +9,7 @@ angular.module('revelation')
     };
 });
 
-function portfolioController($scope){
+function portfolioController($scope, Settings){
     $scope.chart = new Chart(document.getElementById("pie-chart"), {
         type: 'doughnut',
         data: {
@@ -28,6 +28,13 @@ function portfolioController($scope){
             }
         }
     });
+    
+    $scope.$watch(function(){
+        return Settings.tickerToShow;
+    }, function(newValue, oldValue){
+        $scope.tickerToShow = newValue;
+    });
+
     $scope.$watch('walletHolder', function (walletHolder){
         if(walletHolder !== undefined && walletHolder.allTickers !== undefined){
             // create a copy of the holder to order wallets by USD value
@@ -54,7 +61,7 @@ function portfolioController($scope){
             
             $scope.rainbow[i] = "#"+ red + green + blue;
             }
-            
+
             function sin_to_hex(i, phase) {
             var sin = Math.sin(Math.PI / holder.allTickers.length * 2 * i + phase);
             var int = Math.floor((Math.floor(sin * 127) + 128) * 1); // Multiply by 0.7 to make the colors darker.

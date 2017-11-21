@@ -13,7 +13,8 @@
                     {{label}}
                 </div>
                 <hr style='margin: 0 0 0 0;' ng-style="{'border-top': '2px solid ' + rainbow[$index]}">
-                <p>${{walletHolder[label].usdValue}}</p>
+                <p ng-if='tickerToShow === "USD"'>${{walletHolder[label].usdValue}}</p>
+                <p ng-if='tickerToShow === "BTC"'>{{walletHolder[label].btcValueRounded}} BTC</p>
             </div>
         </div>
     </div>

@@ -21,7 +21,7 @@ function portfolioController($scope, Settings){
             }]
         },
         options: {
-            cutoutPercentage: 80,
+            cutoutPercentage: 70,
             elements: {
                 arc: {
                     borderWidth: 1

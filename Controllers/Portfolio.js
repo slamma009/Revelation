@@ -10,6 +10,11 @@ angular.module('revelation')
 });
 
 function portfolioController($scope, Settings){
+    $scope.showCoins = false; // Bool for showing the value of a coin, or the quantity of a coin
+
+    $scope.changeCoinDisplay = function(){
+        $scope.showCoins = !$scope.showCoins;
+    }
     $scope.chart = new Chart(document.getElementById("pie-chart"), {
         type: 'doughnut',
         data: {

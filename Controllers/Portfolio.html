@@ -13,8 +13,9 @@
                     {{label}}
                 </div>
                 <hr style='margin: 0 0 0 0;' ng-style="{'border-top': '2px solid ' + rainbow[$index]}">
-                <p ng-if='tickerToShow === "USD"'>${{walletHolder[label].usdValue}}</p>
-                <p ng-if='tickerToShow === "BTC"'>{{walletHolder[label].btcValueRounded}} BTC</p>
+                <p ng-if='tickerToShow === "USD" && !showCoins' ng-click='changeCoinDisplay();' style='margin: 0 0 0 0; cursor: pointer;'>${{walletHolder[label].usdValue}}</p>
+                <p ng-if='tickerToShow === "BTC" && !showCoins' ng-click='changeCoinDisplay();' style='margin: 0 0 0 0; cursor: pointer;' >{{walletHolder[label].btcValueRounded}} BTC</p>
+                <p ng-if='showCoins' ng-click='changeCoinDisplay();' style='margin: 0 0 0 0; cursor: pointer;'>{{walletHolder[label].quantity.toFixed(8)}}</p>
             </div>
         </div>
     </div>

@@ -31,7 +31,7 @@ function globalSettingsController($scope, Settings){
     console.log($scope.settings);
 
     // If there aren't any settings, load the default ones
-    if($scope.settings === undefined) {  
+    if($scope.settings === undefined || $scope.settings === null) {  
       $scope.settings = {};
       $scope.settings.tickerToShow = 'USD';
     }

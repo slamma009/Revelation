@@ -9,8 +9,9 @@ angular.module('revelation')
   };
 });
 
-function globalSettingsController($scope, Settings){
-  $scope.tickerOptions = ["USD", "BTC"]
+function globalSettingsController($scope, $css, Settings){
+  $scope.tickerOptions = ["USD", "BTC"];
+  $scope.themeOptions = ["Light", "Dark"];
   $scope.settingsChanged = false;
 
   // Called when a field is changed, to update the global settings and turn on the save button
@@ -22,25 +23,37 @@ function globalSettingsController($scope, Settings){
   // Save the current settings
   $scope.saveSettings = function(){
     $scope.settingsChanged = false;
-    console.log($scope.settings);
+    
     localStorage.setItem('globalSettings', JSON.stringify($scope.settings));
   }
   // Load the existing settings
   function loadSettings() {
     $scope.settings = JSON.parse(localStorage.getItem('globalSettings'));
-    console.log($scope.settings);
+    
 
-    // If there aren't any settings, load the default ones
-    if($scope.settings === undefined || $scope.settings === null) {  
+    var hasSettings = !($scope.settings === undefined || $scope.settings === null);
+
+    if(!hasSettings) {  
       $scope.settings = {};
-      $scope.settings.tickerToShow = 'USD';
     }
+    
+    if(!hasSettings || $scope.settings.tickerToShow === undefined)
+      $scope.settings.tickerToShow = 'USD';
+      
+    if(!hasSettings || $scope.settings.theme === undefined)
+      $scope.settings.theme = 'Light';
     setGlobalSettings();
   }
 
   // Set the Settings Service properties to our settings object properties
   function setGlobalSettings(){
     Settings.tickerToShow = $scope.settings.tickerToShow;
+
+    //if(Settings.theme !== $scope.settings.theme){
+      $css.remove('Themes/' + Settings.theme + '.css');
+      Settings.theme = $scope.settings.theme;
+      $css.add('Themes/' + Settings.theme + '.css');
+    //}
   }
 
   loadSettings();

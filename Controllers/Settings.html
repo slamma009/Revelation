@@ -5,4 +5,11 @@
     <div style="display:inline;">Total Ticker </div>
     <select style="color:black;" ng-model="settings.tickerToShow" ng-options="x for x in tickerOptions" ng-change='changeSettings()'>
     </select>
+
+    <br />
+
+    
+    <div style="display:inline;">Theme </div>
+    <select style="color:black;" ng-model="settings.theme" ng-options="x for x in themeOptions" ng-change='changeSettings()'>
+    </select>
 </div>

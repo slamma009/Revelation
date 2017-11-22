@@ -1,10 +1,12 @@
-var app = angular.module('revelation', []);
+var app = angular.module('revelation', ['angularCSS']);
 
 app.service('Settings', function() {
 	var tickerToShow = 'USD';
+    var theme = 'Dark';
 
 	return {
-		tickerToShow: tickerToShow
+        tickerToShow: tickerToShow,
+        theme: theme
 	};
 });
 app.controller('mainController', function ($scope, Settings){
@@ -124,15 +126,21 @@ app.controller('mainController', function ($scope, Settings){
         for(var i=tickersToRemove.length - 1; i >= 0; --i){
             $scope.walletHolder.allTickers.splice(tickersToRemove[i], 1);
         }
-        usdValue = Math.round(usdValue * 100) / 100;
+        usdValue = usdValue.toFixed(2);
         btcValueRounded = btcValueRounded.toFixed(numOfDecimalsToShow);
         
         var $target = $("#usdDisplay");
         
         if(usdValue > $scope.usdValue){
-            $target.css("color", '#50c35a');
+            if($scope.theme === 'Dark')
+                $target.css("color", '#50c35a');
+            else
+                $target.css("color", "#00ff00"); 
         } else {
-            $target.css("color", "#c35252");
+            if($scope.theme === 'Dark')
+                $target.css("color", "#c35252"); 
+            else
+                $target.css("color", "#ff0000"); 
         }
         
         $target.animate({color:'#fff'}, 15000, 'linear');
@@ -149,6 +157,13 @@ app.controller('mainController', function ($scope, Settings){
         return Settings.tickerToShow;
     }, function(newValue, oldValue){
         $scope.tickerToShow = newValue;
+    });
+
+    $scope.$watch(function(){
+        return Settings.theme;
+    }, function(newValue, oldValue){
+        $scope.theme = newValue;
+        console.log('light');
     });
 
     loadAccounts();

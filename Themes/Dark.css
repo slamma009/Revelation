@@ -1,0 +1,36 @@
+html, body {
+    color:#ffffff;
+}
+
+.logo .display {
+    color:#c3c3c3;
+}
+
+.side-bar{
+    background-color:#474c52;
+}
+
+.page-container {
+    background-color:#343b41;
+}
+
+.side-bar .button {
+    background-color:#474c52;
+    color:#d0d0d0;
+}
+
+.side-bar .button:hover{
+    color:#fff;
+}
+.side-bar .selected{
+    background-color:#343b41 !important;
+    color:#fff !important;
+}
+
+.muted-green {
+    color:#50c35a;
+}
+
+.muted-red {
+    color:#c35252;
+}

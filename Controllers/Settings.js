@@ -11,7 +11,7 @@ angular.module('revelation')
 
 function globalSettingsController($scope, $css, Settings){
   $scope.tickerOptions = ["USD", "BTC"];
-  $scope.themeOptions = ["Light", "Dark"];
+  $scope.themeOptions = ["Light", "Dark", "Space", 'Geometry'];
   $scope.settingsChanged = false;
 
   // Called when a field is changed, to update the global settings and turn on the save button

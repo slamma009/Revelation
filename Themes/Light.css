@@ -28,10 +28,23 @@ html, body {
     color:#000 !important;
 }
 
+input {
+    background-color:#fff;
+}
+
+.statistic-card {
+    background-color:#fff; 
+    color: #626262;
+}
+
+.statistic-card h4 {
+    color:#000;
+}
+
 .muted-green {
-    color:#00ff00;
+    color:#009900;
 }
 
 .muted-red {
-    color:#ff0000;
+    color:#AA0000;
 }

@@ -1,0 +1,55 @@
+body {
+    background-image: url('../Content/Space.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color:white;
+}
+
+.logo .display {
+    color:#ddd;
+}
+
+
+.side-bar{
+    background-color:rgba(0,0,0,0.6);
+    color: #fff;
+
+}
+
+.page-container {
+    background-color:rgba(57, 84, 104, 0.5);
+}
+
+.side-bar .button {
+    color:#ddd;
+}
+
+.side-bar .button:hover{
+    color:#fff;
+}
+.side-bar .selected{
+    background-color:rgba(58, 104, 138, 0.5);
+    color:#fff !important;
+}
+
+input {
+    background-color:rgba(58, 104, 138, 0.25);
+}
+
+.statistic-card {
+    background-color:#ddd; 
+    background-color:rgba(0,0,0,0.25);
+}
+
+.statistic-card h4 {
+    color:#fff;
+}
+
+.muted-green {
+    color:#00ff00;
+}
+
+.muted-red {
+    color:#ff0000;
+}

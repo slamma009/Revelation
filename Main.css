@@ -50,23 +50,16 @@ html, body {
     cursor:pointer;
 }
 
-input {
-    background-color:#474c52;
-}
-
 .statistic-card {
-    background-color:#33464f; 
     margin: 5 5 5 5; 
     padding: 0 10 10 10; 
     border-radius:10px; 
     display:inline-block;
-    color: #b4b4b4;
     width: 250px;
     text-align:left;
 }
 
 .statistic-card h4 {
-    color:#fff;
     width:100%;
     text-align:center;
 }

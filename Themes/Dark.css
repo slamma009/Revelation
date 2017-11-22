@@ -27,6 +27,19 @@ html, body {
     color:#fff !important;
 }
 
+input {
+    background-color:#474c52;
+}
+
+.statistic-card {
+    background-color:#33464f; 
+    color: #b4b4b4;
+}
+
+.statistic-card h4 {
+    color:#fff;
+}
+
 .muted-green {
     color:#50c35a;
 }

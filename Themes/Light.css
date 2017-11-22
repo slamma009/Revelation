@@ -7,7 +7,7 @@ html, body {
 }
 
 .side-bar{
-    background-color:#6bbed6;
+    background-color:#2da6c7;
     color: #fff;
 }
 
@@ -16,7 +16,6 @@ html, body {
 }
 
 .side-bar .button {
-    background-color:#6bbed6;
     color:#ddd;
 }
 

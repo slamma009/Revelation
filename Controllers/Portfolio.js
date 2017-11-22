@@ -24,7 +24,7 @@ function portfolioController($scope, Settings){
             cutoutPercentage: 80,
             elements: {
                 arc: {
-                    borderWidth: 0
+                    borderWidth: 1
                 }
             },
             animation : false,  
@@ -84,8 +84,10 @@ function portfolioController($scope, Settings){
             // Set the color rainbow to the background colors, and add the dataset to the chart
             var datasetDarker = angular.copy(dataset);
             datasetDarker.backgroundColor = $scope.rainbowInner;
+            datasetDarker.borderColor = $scope.rainbowInner; 
             dataset.backgroundColor = $scope.rainbow; 
-            $scope.chart.data.datasets = [dataset, datasetDarker];
+            dataset.borderColor = $scope.rainbow;
+            $scope.chart.data.datasets = [angular.copy(dataset), dataset, datasetDarker];
 
             //update the chart
             $scope.chart.update();

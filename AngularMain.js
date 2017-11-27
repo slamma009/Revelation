@@ -13,6 +13,7 @@ app.controller('mainController', function ($scope, Settings){
     var loadedAccounts = 0;
     $scope.selected = 'portfolio';
     $scope.usdValue = 0;
+    $scope.btcValueRounded = 0;
     $scope.walletHolder = {};
     Settings.tickerToShow = 'USD';
     
@@ -131,7 +132,7 @@ app.controller('mainController', function ($scope, Settings){
         
         var $target = $("#usdDisplay");
         
-        if(usdValue > $scope.usdValue){
+        if(($scope.tickerToShow === 'USD' && usdValue > $scope.usdValue) || ($scope.tickerToShow === 'BTC' && btcValueRounded > $scope.btcValueRounded)) {
             if($scope.theme === 'Dark')
                 $target.css("color", '#50c35a');
             else

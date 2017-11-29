@@ -63,7 +63,7 @@ app.controller('mainController', function ($scope, Settings){
                 var newObj = {};
                 // Market names look like BTC_ETH on polonies, we need it to be BTC-ETH
                 var tickerObj = properties[i].replace('_','-'); 
-                newObj.MarketName = tickerObj[0] + '-' + tickerObj[1];
+                newObj.MarketName = tickerObj;
                 newObj.Ask = response[properties[i]].lowestAsk;
                 newObj.Bid = response[properties[i]].highestBid;
                 newObj.Last = response[properties[i]].last;
@@ -100,6 +100,7 @@ app.controller('mainController', function ($scope, Settings){
                     if(rawMarkets[i][j].MarketName.split('-')[0] === 'BTC' 
                     || rawMarkets[i][j].MarketName.split('-')[0] === 'USDT')
                     {
+
                         var found = false;
                         // Loop through all market summaries to make sure it's not already added
                         for(var k = 0; k<marketSummary.length; ++k){

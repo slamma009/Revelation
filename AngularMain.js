@@ -11,17 +11,20 @@ app.service('Settings', function() {
 });
 app.controller('mainController', function ($scope, Settings){
     var loadedAccounts = 0;
+    var loadedMarkets = 0;
+    var marketsToLoad = 2;
+    var rawMarkets = [];
     $scope.selected = 'portfolio';
     $scope.usdValue = 0;
-    $scope.btcValueRounded = 0;
     $scope.walletHolder = {};
     Settings.tickerToShow = 'USD';
-    
+    // Loads any saved account info from the local storage
     function loadAccounts() {
         var item = JSON.parse(localStorage.getItem('accountInfo'));
         if(item !== undefined && item !== null){
             $scope.accounts = item;
         } else {
+            // If the item doesn't exist, then makea  default one
         	item = {};
         	item.manualWallets = [];
         	item.bittrexAccounts = [];
@@ -30,28 +33,108 @@ app.controller('mainController', function ($scope, Settings){
     }
     
     function checkForWalletKey(ticker){
+        // If the ticker is not in the wallet holder, then add it and assign it the default values
         if(!hasKey($scope.walletHolder, ticker)){
             $scope.walletHolder.allTickers.push(ticker);
             $scope.walletHolder[ticker] = {quantity: 0, usdValue: 0, btcValue: 0};
         }
     }
 
-    function getWallets(){ 
-        getMarketSummariesFromAPI().then(function(response){
-            loadedAccounts = 0;
-            $scope.marketSummaries = response.result;
-            $scope.walletHolder = {};
-            $scope.walletHolder.allTickers = [];
-            getBittrexWallets();
-            for(var i=0; i<$scope.accounts.manualWallets.length; ++i){
-                checkForWalletKey($scope.accounts.manualWallets[i].Ticker)
-                
-                $scope.walletHolder[$scope.accounts.manualWallets[i].Ticker].quantity += parseFloat($scope.accounts.manualWallets[i].Quantity);
+    // Loads all the market data from all included exchanges
+    function getAllMarkets(){
+        // Reset the loaded markets and the raw market data
+        loadedMarkets = 0;
+        rawMarkets = [];
+        getPoloniexMarkets().then(function(response){
+            // We need to make the Poloniex data match the Bittrex data
+            loadedMarkets++;
+
+            // Poloniex has all the ticker data stored under the market name, so we need to get all the properties
+            var properties = [];
+            for(var key in response) {
+                if(response.hasOwnProperty(key) && typeof response[key] !== 'function') {
+                    properties.push(key);
+                }
             }
-            if($scope.accounts.bittrexAccounts.length === 0){
-                getMarketValues();
+            
+            // Now loop thorugh all the properties to create the modified market data
+            var marketObj = [];
+            for(var i=0; i<properties.length; ++i){
+                var newObj = {};
+                // Market names look like BTC_ETH on polonies, we need it to be BTC-ETH
+                var tickerObj = properties[i].replace('_','-'); 
+                newObj.MarketName = tickerObj[0] + '-' + tickerObj[1];
+                newObj.Ask = response[properties[i]].lowestAsk;
+                newObj.Bid = response[properties[i]].highestBid;
+                newObj.Last = response[properties[i]].last;
+                newObj.BaseVolume = response[properties[i]].baseVolume;
+
+                marketObj.push(newObj);
+            }
+            rawMarkets.push(marketObj);
+            combineMarkets();
+        });
+        
+        getBittrexMarkets().then(function(response){
+            if(response.success) {
+                loadedMarkets++;
+                rawMarkets.push(response.result);
+                combineMarkets();
+            } else {
+                alert(response.message);
             }
         });
+    }
+
+    // Combines any and all market data into 1 usable market summarie
+    function combineMarkets(){
+        // Make sure we have all the data before continuing
+        if(loadedMarkets === marketsToLoad){
+            var marketSummary = [];
+            // Loop through each markets response
+            for(var i=0; i<rawMarkets.length; ++i){
+                // Loop through all the coins for tha tmarket
+                for(var j=0; j<rawMarkets[i].length; ++j){
+                    // Only currently using BTC and USDT markets.
+                    // Note: Any exchange that uses USD will be modified to match USDT for simplicity
+                    if(rawMarkets[i][j].MarketName.split('-')[0] === 'BTC' 
+                    || rawMarkets[i][j].MarketName.split('-')[0] === 'USDT')
+                    {
+                        var found = false;
+                        // Loop through all market summaries to make sure it's not already added
+                        for(var k = 0; k<marketSummary.length; ++k){
+                            if(marketSummary[k].MarketName === rawMarkets[i][j].MarketName){
+                                found = true;
+                                // TODO: Maybe average market data in future?
+                                break;
+                            }
+                        }
+                        if(!found){
+                            // If it wasn't found then push the market data to the list
+                            marketSummary.push(rawMarkets[i][j]);
+                        }
+                    }
+                }
+            }
+            $scope.marketSummaries = angular.copy(marketSummary);
+            // Now that all market data has been loaded, load all account info
+            getWallets();
+        }
+    }
+    // Creates all the wallets for the wallet holder, as well as the current market values
+    function getWallets(){ 
+        loadedAccounts = 0;
+        $scope.walletHolder = {};
+        $scope.walletHolder.allTickers = [];
+        getBittrexWallets();
+        for(var i=0; i<$scope.accounts.manualWallets.length; ++i){
+            checkForWalletKey($scope.accounts.manualWallets[i].Ticker)
+            
+            $scope.walletHolder[$scope.accounts.manualWallets[i].Ticker].quantity += parseFloat($scope.accounts.manualWallets[i].Quantity);
+        }
+        if($scope.accounts.bittrexAccounts.length === 0){
+            getMarketValues();
+        }
     }
 
     function getBittrexWallets() {
@@ -151,7 +234,7 @@ app.controller('mainController', function ($scope, Settings){
     }
 
     $scope.$watch('accounts', function(){
-        getWallets();
+        getAllMarkets();
     });
 
     $scope.$watch(function(){
@@ -170,5 +253,6 @@ app.controller('mainController', function ($scope, Settings){
     loadAccounts();
 
     setInterval(function(){
-        getWallets()}, 30000)
+        getAllMarkets()
+    }, 30000)
 });

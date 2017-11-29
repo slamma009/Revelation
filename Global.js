@@ -57,7 +57,7 @@ function getWalletsFromAPI(account) {
     return bittrexCall('account/getbalances', account);
 }
 
-function getMarketSummariesFromAPI(account) {
+function getBittrexMarkets(account) {
     return bittrexCall('public/getmarketsummaries ', undefined);
 }
 

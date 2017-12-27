@@ -163,7 +163,7 @@ app.controller('mainController', function ($scope, Settings){
     // Get's the market value of each coin
     function getMarketValues(){
         var usdValue = 0;
-        var btcValueRounded = 0;
+        var totalBtcValue = 0;
         var btcValue = 0;
         var tickersToRemove = []; // Keep a list of tickers that are practically worthless, so we can remove them
         for(var i=0; i<$scope.marketSummaries.length; ++i){
@@ -175,7 +175,6 @@ app.controller('mainController', function ($scope, Settings){
             if(baseTicker === 'BTC'){
                 if($scope.walletHolder[marketTicker] !== undefined){
                     $scope.walletHolder[marketTicker].btcValue = $scope.marketSummaries[i].Last * $scope.walletHolder[marketTicker].quantity;
-                    $scope.walletHolder[marketTicker].btcValueRounded = $scope.walletHolder[marketTicker].btcValue.toFixed(numOfDecimalsToShow);
                     $scope.walletHolder[marketTicker].btcMarketValue = $scope.marketSummaries[i].Last;
                 }
             } else if(baseTicker === 'USDT' && marketTicker === 'BTC'){
@@ -195,15 +194,14 @@ app.controller('mainController', function ($scope, Settings){
                     tickersToRemove.push(j);
                 } else {
                     usdValue += $scope.walletHolder[$scope.walletHolder.allTickers[j]].usdValue;
-                    btcValueRounded += $scope.walletHolder[$scope.walletHolder.allTickers[j]].btcValue;
+                    totalBtcValue += $scope.walletHolder[$scope.walletHolder.allTickers[j]].btcValue;
                 }
             } else {
                 $scope.walletHolder['BTC'].btcValue =  $scope.walletHolder['BTC'].quantity;
-                $scope.walletHolder['BTC'].btcValueRounded = $scope.walletHolder['BTC'].quantity.toFixed(numOfDecimalsToShow);
                 $scope.walletHolder['BTC'].usdValue =  Math.round($scope.walletHolder['BTC'].btcValue * btcValue * 100) / 100;
                 $scope.walletHolder['BTC'].usdMarketValue = Math.round(btcValue * 100) / 100;
                 usdValue += $scope.walletHolder['BTC'].usdValue;
-                btcValueRounded+= $scope.walletHolder['BTC'].btcValue;
+                totalBtcValue+= $scope.walletHolder['BTC'].btcValue;
             }
         }
 
@@ -211,12 +209,10 @@ app.controller('mainController', function ($scope, Settings){
         for(var i=tickersToRemove.length - 1; i >= 0; --i){
             $scope.walletHolder.allTickers.splice(tickersToRemove[i], 1);
         }
-        usdValue = usdValue.toFixed(2);
-        btcValueRounded = btcValueRounded.toFixed(numOfDecimalsToShow);
         
         var $target = $("#usdDisplay");
         
-        if(($scope.tickerToShow === 'USD' && usdValue > $scope.usdValue) || ($scope.tickerToShow === 'BTC' && btcValueRounded > $scope.btcValueRounded)) {
+        if(($scope.tickerToShow === 'USD' && usdValue > $scope.usdValue) || ($scope.tickerToShow === 'BTC' && totalBtcValue > $scope.totalBtcValue)) {
             if($scope.theme === 'Dark')
                 $target.css("color", '#50c35a');
             else
@@ -230,7 +226,7 @@ app.controller('mainController', function ($scope, Settings){
         
         $target.animate({color:'#fff'}, 15000, 'linear');
         $scope.usdValue = usdValue
-        $scope.btcValueRounded = btcValueRounded;
+        $scope.totalBtcValue = totalBtcValue;
         $scope.$apply();
     }
 

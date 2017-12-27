@@ -10,7 +10,7 @@
                     {{coin.ticker}} 
                 </div>
                 <div class='col-xs-6'>
-                    $ {{coin.wallet.usdValue}}
+                    {{coin.wallet.usdMarketValue | currency : $ : 2}}
                 </div>
             </div>
         </div>

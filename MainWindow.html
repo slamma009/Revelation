@@ -38,10 +38,10 @@
                     </div>
                     <b>Revelation</b> <br/>
                     <div class='display' ng-if='tickerToShow === "USD"'>
-                        <span style='font-size:15px; color:#fff;' id='usdDisplay'>{{usdValue}}</span> USD
+                        $<span style='font-size:15px; color:#fff;' id='usdDisplay'>{{usdValue | number : 2}}</span> USD
                     </div>
                     <div class='display' ng-if='tickerToShow === "BTC"'>
-                        <span style='font-size:15px; color:#fff;' id='usdDisplay'>{{btcValueRounded}}</span> BTC
+                        <span style='font-size:15px; color:#fff;' id='usdDisplay'>{{totalBtcValue | number : 8}}</span> BTC
                     </div>
                 </div>
                 <br/>

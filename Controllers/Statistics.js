@@ -40,7 +40,7 @@ function statisticsController($scope){
 
     function calculateValuable(){
         $scope.MostValuableCoins = angular.copy($scope.allCoins).sort(function(a, b){
-            return b.wallet.usdValue - a.wallet.usdValue;
+            return b.wallet.usdMarketValue - a.wallet.usdMarketValue;
         });
         
         if($scope.MostValuableCoins.length > 5){

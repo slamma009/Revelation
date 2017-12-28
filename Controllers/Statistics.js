@@ -35,6 +35,7 @@ function statisticsController($scope){
             }
 
             calculateValuable();
+            
         }
     });
 
@@ -42,10 +43,6 @@ function statisticsController($scope){
         $scope.MostValuableCoins = angular.copy($scope.allCoins).sort(function(a, b){
             return b.wallet.usdMarketValue - a.wallet.usdMarketValue;
         });
-        
-        if($scope.MostValuableCoins.length > 5){
-            $scope.MostValuableCoins = $scope.MostValuableCoins.splice(0, 5);
-        }
     }
 
     function getGains(timestamp, ticker, days) {
@@ -126,40 +123,46 @@ function statisticsController($scope){
         }
     }
     function calculateMonthlyGains() {
-        var MonthlyGains = angular.copy($scope.allCoins).sort(function(a, b){
+        var MonthlyGainsTemp = angular.copy($scope.allCoins).sort(function(a, b){
             return b.monthlyGain - a.monthlyGain;
         });
         
-        if(MonthlyGains.length > 5){
-            MonthlyGains = MonthlyGains.splice(0, 5);
+        var MonthlyGains = [];
+        for(var i=0; i<MonthlyGainsTemp.length; ++i){
+            var coin = {ticker: MonthlyGainsTemp[i].ticker, gains: MonthlyGainsTemp[i].monthlyGain}
+            MonthlyGains.push(coin);
         }
 
         $scope.MonthlyGains = MonthlyGains;
 
     }
     function calculateWeeklyGains() {
-        var WeeklyGains = angular.copy($scope.allCoins).sort(function(a, b){
+        var WeeklyGainsTemp = angular.copy($scope.allCoins).sort(function(a, b){
             return b.weeklyGain - a.weeklyGain;
         });
-        
-        if(WeeklyGains.length > 5){
-            WeeklyGains = WeeklyGains.splice(0, 5);
+
+        var WeeklyGains = [];
+        for(var i=0; i<WeeklyGainsTemp.length; ++i){
+            var coin = {ticker: WeeklyGainsTemp[i].ticker, gains: WeeklyGainsTemp[i].weeklyGain}
+            WeeklyGains.push(coin);
         }
 
         $scope.WeeklyGains = WeeklyGains;
 
     }
     function calculateDailyGains() {
-        var DailyGains = angular.copy($scope.allCoins).sort(function(a, b){
+        var DailyGainsTemp = angular.copy($scope.allCoins).sort(function(a, b){
             return b.dailyGain - a.dailyGain;
         });
-        
-        if(DailyGains.length > 5){
-            DailyGains = DailyGains.splice(0, 5);
+
+        var DailyGains = [];
+        for(var i=0; i<DailyGainsTemp.length; ++i){
+            var coin = {ticker: DailyGainsTemp[i].ticker, gains: DailyGainsTemp[i].dailyGain}
+            DailyGains.push(coin);
         }
 
-        $scope.DailyGains = DailyGains;
 
+        $scope.DailyGains = DailyGains;
 
     }
 

@@ -1,0 +1,25 @@
+<h4>{{cardTitle}}</h4>
+<div ng-repeat='coin in displayObjects track by $index'>
+    <div class='row' ng-if="$index >= pageNumber * 5 && $index < (pageNumber + 1) * 5">
+        <div class='col-xs-2'>
+            {{$index + 1}}.
+        </div>
+        <div class='col-xs-4'>
+            {{coin.ticker}} 
+        </div>
+        <div class='col-xs-6' ng-if="cardType === 'coinValue'">
+            {{coin.wallet.usdMarketValue | currency : $ : 2}}
+        </div>
+        <div class='col-xs-6' ng-class="{'muted-green': coin.gains > 0, 'muted-red': coin.gains < 0}" ng-if="cardType === 'coinGains'">
+            {{coin.gains}} %
+        </div>
+    </div>
+</div>
+<div class="row" ng-if="displayObjects.length > 5">
+    <div class="col-xs-6">
+        <div ng-if="pageNumber > 0" ng-click="changePage(-1)" style='cursor: pointer'>Prev</div>
+    </div>
+    <div class="col-xs-6">
+        <div ng-if="(pageNumber + 1) * 5 < displayObjects.length" ng-click="changePage(1)" style='text-align:right; cursor: pointer;'>Next</div>
+    </div>
+</div>

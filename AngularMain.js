@@ -12,7 +12,7 @@ app.service('Settings', function() {
 app.controller('mainController', function ($scope, Settings){
     var loadedAccounts = 0;
     var loadedMarkets = 0;
-    var marketsToLoad = 2;
+    var marketsToLoad = 3;
     var rawMarkets = [];
     $scope.selected = 'portfolio';
     $scope.usdValue = 0;
@@ -68,6 +68,34 @@ app.controller('mainController', function ($scope, Settings){
                 newObj.Bid = response[properties[i]].highestBid;
                 newObj.Last = response[properties[i]].last;
                 newObj.BaseVolume = response[properties[i]].baseVolume;
+
+                marketObj.push(newObj);
+            }
+            rawMarkets.push(marketObj);
+            combineMarkets();
+        });
+
+        getCoinMarketCap().then(function(response){
+            // We need to make the coin market cap data match the Bittrex data
+            loadedMarkets++;
+            
+            // Now loop thorugh all the response objects to create our array
+            var marketObj = [];
+            for(var i=0; i<response.length; ++i){
+                var newObj = {};
+                if(response[i].symbol !== 'BTC'){
+                    //Since this isn't a BTC object, lets make the coin a "BTC market"
+                    newObj.MarketName = 'BTC-' + response[i].symbol;
+                    newObj.Ask = response[i].price_btc;
+                    newObj.Bid = response[i].price_btc;
+                    newObj.Last = response[i].price_btc;
+                } else {
+                    //Since this is BTC, lets make it a "USDT market"
+                    newObj.MarketName = 'USDT-' + response[i].symbol;
+                    newObj.Ask = response[i].price_usd;
+                    newObj.Bid = response[i].price_usd;
+                    newObj.Last = response[i].price_usd;
+                }
 
                 marketObj.push(newObj);
             }

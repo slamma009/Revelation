@@ -1,4 +1,3 @@
-
 angular.module('revelation')
 .directive('globalSettings', function() {
   return {
@@ -22,9 +21,18 @@ function globalSettingsController($scope, $css, Settings){
 
   // Save the current settings
   $scope.saveSettings = function(){
-    $scope.settingsChanged = false;
+    getCoinMarketCap($scope.tickerToShow.toUpperCase(), 1).then(function(result){
+      if(result === undefined || result.length === 0 || result[0]['price_' + $scope.tickerToShow.toLowerCase()] === undefined){
+        alert("Unable to find currency to use. Settings not saved.");
+      } else {
+        $scope.settingsChanged = false;
+        $scope.settings.tickerToShow = $scope.tickerToShow.toUpperCase();
+        localStorage.setItem('globalSettings', JSON.stringify($scope.settings));
+        setGlobalSettings();
+      }
+      $scope.$apply();
+    });
     
-    localStorage.setItem('globalSettings', JSON.stringify($scope.settings));
   }
   // Load the existing settings
   function loadSettings() {
@@ -38,7 +46,12 @@ function globalSettingsController($scope, $css, Settings){
     }
     
     if(!hasSettings || $scope.settings.tickerToShow === undefined)
+    {
       $scope.settings.tickerToShow = 'USD';
+      $scope.tickerToShow = 'USD'
+    } else {
+      $scope.tickerToShow = angular.copy($scope.settings.tickerToShow);
+    }
       
     if(!hasSettings || $scope.settings.theme === undefined)
       $scope.settings.theme = 'Light';

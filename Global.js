@@ -1,6 +1,6 @@
 const CryptoJS = require("crypto-js");
 
-var Currencies = {USD: "$"};
+var Currencies = {USD: '$', CAD: '$', GBP: '&#163;', EUR: '&#8364;', CNY: '&#165;'};
 
 function hasKey(arr, key){
     return arr[key] !== undefined;

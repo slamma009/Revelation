@@ -2,10 +2,10 @@
     <h4 style='display:inline;'>Settings</h4>
     <span class='glyphicon glyphicon-floppy-disk glyph-btn' ng-if='settingsChanged' ng-click="saveSettings()" style='color:#7eb8f7'></span>
     <br/>
-    <div style="display:inline;">Total Ticker </div>
-    <select style="color:black;" ng-model="settings.tickerToShow" ng-options="x for x in tickerOptions" ng-change='changeSettings()'>
+    <div style="display:inline;">Base Currency </div>
     </select>
 
+    <input type='text' ng-model='tickerToShow' style='width:70px' ng-change='changeSettings()'/>
     <br />
 
     

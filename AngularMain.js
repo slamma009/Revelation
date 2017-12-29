@@ -9,15 +9,21 @@ app.service('Settings', function() {
         theme: theme
 	};
 });
-app.controller('mainController', function ($scope, Settings){
+app.controller('mainController', function ($scope, $window, Settings){
     var loadedAccounts = 0;
     var loadedMarkets = 0;
     var marketsToLoad = 1;
     var rawMarkets = [];
     $scope.selected = 'portfolio';
     $scope.usdValue = 0;
+    $scope.totalCurrencyValue = 0;
+    $scope.Currencies = $window.Currencies;
     $scope.walletHolder = {};
-    Settings.tickerToShow = 'USD';
+    $scope.tempSettings = JSON.parse(localStorage.getItem('globalSettings'));
+    if($scope.tempSettings !== undefined && $scope.tempSettings.tickerToShow !== undefined)
+        $scope.tickerToShow = $scope.tempSettings.tickerToShow;
+    else
+        $scope.tickerToShow = 'USD';
     // Loads any saved account info from the local storage
     function loadAccounts() {
         var item = JSON.parse(localStorage.getItem('accountInfo'));
@@ -43,7 +49,7 @@ app.controller('mainController', function ($scope, Settings){
     // Loads all the market data from all included exchanges
     function getAllMarkets(){
         rawMarkets = [];
-        getCoinMarketCap().then(function(response){
+        getCoinMarketCap($scope.tickerToShow, 0).then(function(response){
             $scope.marketSummaries = angular.copy(response);
             getWallets();
         });
@@ -89,19 +95,23 @@ app.controller('mainController', function ($scope, Settings){
 
     // Get's the market value of each coin
     function getMarketValues(){
+        var priceString = 'price_' + $scope.tickerToShow.toLowerCase();
+        var totalString = 'total_' + $scope.tickerToShow.toLowerCase();
         var usdValue = 0;
-        var totalBtcValue = 0;
+        var totalCurrencyValue = 0;
         var tickersToRemove = []; // Keep a list of tickers that are practically worthless, so we can remove them
         for(var i=0; i<$scope.marketSummaries.length; ++i){
             var marketTicker = $scope.marketSummaries[i].symbol;
             
             if($scope.walletHolder[marketTicker] !== undefined){
+                $scope.walletHolder[marketTicker][totalString] = $scope.marketSummaries[i][priceString] * $scope.walletHolder[marketTicker].quantity;
+                $scope.walletHolder[marketTicker][priceString] = $scope.marketSummaries[i][priceString];
                 $scope.walletHolder[marketTicker].total_usd = $scope.marketSummaries[i].price_usd * $scope.walletHolder[marketTicker].quantity;
                 $scope.walletHolder[marketTicker].price_usd = $scope.marketSummaries[i].price_usd;
                 $scope.walletHolder[marketTicker].total_btc = $scope.marketSummaries[i].price_btc * $scope.walletHolder[marketTicker].quantity;
                 $scope.walletHolder[marketTicker].price_btc = $scope.marketSummaries[i].price_btc;
                 if($scope.walletHolder[marketTicker].total_usd > 0.5){
-                    totalBtcValue += $scope.walletHolder[marketTicker].total_btc;
+                    totalCurrencyValue += $scope.walletHolder[marketTicker][totalString];
                     usdValue += $scope.walletHolder[marketTicker].total_usd;
                 } else {
                     $scope.walletHolder[$scope.walletHolder.allTickers[j]] = undefined;
@@ -118,7 +128,7 @@ app.controller('mainController', function ($scope, Settings){
         
         var $target = $("#usdDisplay");
         
-        if(($scope.tickerToShow === 'USD' && usdValue > $scope.usdValue) || ($scope.tickerToShow === 'BTC' && totalBtcValue > $scope.totalBtcValue)) {
+        if(totalCurrencyValue > $scope.totalCurrencyValue) {
             if($scope.theme === 'Dark')
                 $target.css("color", '#50c35a');
             else
@@ -131,8 +141,7 @@ app.controller('mainController', function ($scope, Settings){
         }
         
         $target.animate({color:'#fff'}, 15000, 'linear');
-        $scope.usdValue = usdValue
-        $scope.totalBtcValue = totalBtcValue;
+        $scope.totalCurrencyValue = totalCurrencyValue
         $scope.$apply();
     }
 
@@ -144,6 +153,7 @@ app.controller('mainController', function ($scope, Settings){
         return Settings.tickerToShow;
     }, function(newValue, oldValue){
         $scope.tickerToShow = newValue;
+        getAllMarkets();
     });
 
     $scope.$watch(function(){
@@ -158,4 +168,12 @@ app.controller('mainController', function ($scope, Settings){
     setInterval(function(){
         getAllMarkets()
     }, 300000)
+});
+
+
+
+app.filter('unsafe', function($sce) {
+    return function(val) {
+        return $sce.trustAsHtml(val);
+    };
 });

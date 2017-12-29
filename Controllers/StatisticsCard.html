@@ -8,7 +8,7 @@
             {{coin.ticker}} 
         </div>
         <div class='col-xs-6' ng-if="cardType === 'coinValue'">
-            {{coin.wallet.usdMarketValue | currency : $ : 2}}
+            {{coin.wallet.price_usd | currency : $ : 2}}
         </div>
         <div class='col-xs-6' ng-class="{'muted-green': coin.gains > 0, 'muted-red': coin.gains < 0}" ng-if="cardType === 'coinGains'">
             {{coin.gains}} %

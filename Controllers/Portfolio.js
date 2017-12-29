@@ -9,9 +9,9 @@ angular.module('revelation')
     };
 });
 
-function portfolioController($scope, Settings){
+function portfolioController($scope, $window, Settings){
     $scope.showCoins = false; // Bool for showing the value of a coin, or the quantity of a coin
-
+    $scope.Currencies = $window.Currencies;
     $scope.changeCoinDisplay = function(){
         $scope.showCoins = !$scope.showCoins;
     }
@@ -50,7 +50,7 @@ function portfolioController($scope, Settings){
             // create a copy of the holder to order wallets by USD value
             var holder = angular.copy(walletHolder);
             holder.allTickers = holder.allTickers.sort(function(a,b) {
-                return holder[b].usdValue - holder[a].usdValue;
+                return holder[b]['total_' + $scope.tickerToShow.toLowerCase()] - holder[a]['total_' + $scope.tickerToShow.toLowerCase()];
             });
             
             // Set the labels to the wallet tickers
@@ -59,7 +59,7 @@ function portfolioController($scope, Settings){
             // Create the data set object and put in the usdValues
             var dataset = {label:'', backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"], data: []}
             for(var i=0; i<holder.allTickers.length; ++i){
-                dataset.data.push(holder[holder.allTickers[i]].usdValue);
+                dataset.data.push(holder[holder.allTickers[i]]['total_' + $scope.tickerToShow.toLowerCase()]);
             }
 
             // Generate a color rainbow for the pie chart

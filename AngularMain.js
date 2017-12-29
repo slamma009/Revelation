@@ -12,7 +12,7 @@ app.service('Settings', function() {
 app.controller('mainController', function ($scope, Settings){
     var loadedAccounts = 0;
     var loadedMarkets = 0;
-    var marketsToLoad = 3;
+    var marketsToLoad = 1;
     var rawMarkets = [];
     $scope.selected = 'portfolio';
     $scope.usdValue = 0;
@@ -36,120 +36,19 @@ app.controller('mainController', function ($scope, Settings){
         // If the ticker is not in the wallet holder, then add it and assign it the default values
         if(!hasKey($scope.walletHolder, ticker)){
             $scope.walletHolder.allTickers.push(ticker);
-            $scope.walletHolder[ticker] = {quantity: 0, usdValue: 0, btcValue: 0};
+            $scope.walletHolder[ticker] = {quantity: 0, total_usd: 0, total_btc: 0};
         }
     }
 
     // Loads all the market data from all included exchanges
     function getAllMarkets(){
-        // Reset the loaded markets and the raw market data
-        loadedMarkets = 0;
         rawMarkets = [];
-        getPoloniexMarkets().then(function(response){
-            // We need to make the Poloniex data match the Bittrex data
-            loadedMarkets++;
-
-            // Poloniex has all the ticker data stored under the market name, so we need to get all the properties
-            var properties = [];
-            for(var key in response) {
-                if(response.hasOwnProperty(key) && typeof response[key] !== 'function') {
-                    properties.push(key);
-                }
-            }
-            
-            // Now loop thorugh all the properties to create the modified market data
-            var marketObj = [];
-            for(var i=0; i<properties.length; ++i){
-                var newObj = {};
-                // Market names look like BTC_ETH on polonies, we need it to be BTC-ETH
-                var tickerObj = properties[i].replace('_','-'); 
-                newObj.MarketName = tickerObj;
-                newObj.Ask = response[properties[i]].lowestAsk;
-                newObj.Bid = response[properties[i]].highestBid;
-                newObj.Last = response[properties[i]].last;
-                newObj.BaseVolume = response[properties[i]].baseVolume;
-
-                marketObj.push(newObj);
-            }
-            rawMarkets.push(marketObj);
-            combineMarkets();
-        });
-
         getCoinMarketCap().then(function(response){
-            // We need to make the coin market cap data match the Bittrex data
-            loadedMarkets++;
-            
-            // Now loop thorugh all the response objects to create our array
-            var marketObj = [];
-            for(var i=0; i<response.length; ++i){
-                var newObj = {};
-                if(response[i].symbol !== 'BTC'){
-                    //Since this isn't a BTC object, lets make the coin a "BTC market"
-                    newObj.MarketName = 'BTC-' + response[i].symbol;
-                    newObj.Ask = response[i].price_btc;
-                    newObj.Bid = response[i].price_btc;
-                    newObj.Last = response[i].price_btc;
-                } else {
-                    //Since this is BTC, lets make it a "USDT market"
-                    newObj.MarketName = 'USDT-' + response[i].symbol;
-                    newObj.Ask = response[i].price_usd;
-                    newObj.Bid = response[i].price_usd;
-                    newObj.Last = response[i].price_usd;
-                }
-
-                marketObj.push(newObj);
-            }
-            rawMarkets.push(marketObj);
-            combineMarkets();
-        });
-        
-        getBittrexMarkets().then(function(response){
-            if(response.success) {
-                loadedMarkets++;
-                rawMarkets.push(response.result);
-                combineMarkets();
-            } else {
-                alert(response.message);
-            }
-        });
-    }
-
-    // Combines any and all market data into 1 usable market summarie
-    function combineMarkets(){
-        // Make sure we have all the data before continuing
-        if(loadedMarkets === marketsToLoad){
-            var marketSummary = [];
-            // Loop through each markets response
-            for(var i=0; i<rawMarkets.length; ++i){
-                // Loop through all the coins for tha tmarket
-                for(var j=0; j<rawMarkets[i].length; ++j){
-                    // Only currently using BTC and USDT markets.
-                    // Note: Any exchange that uses USD will be modified to match USDT for simplicity
-                    if(rawMarkets[i][j].MarketName.split('-')[0] === 'BTC' 
-                    || rawMarkets[i][j].MarketName.split('-')[0] === 'USDT')
-                    {
-
-                        var found = false;
-                        // Loop through all market summaries to make sure it's not already added
-                        for(var k = 0; k<marketSummary.length; ++k){
-                            if(marketSummary[k].MarketName === rawMarkets[i][j].MarketName){
-                                found = true;
-                                // TODO: Maybe average market data in future?
-                                break;
-                            }
-                        }
-                        if(!found){
-                            // If it wasn't found then push the market data to the list
-                            marketSummary.push(rawMarkets[i][j]);
-                        }
-                    }
-                }
-            }
-            $scope.marketSummaries = angular.copy(marketSummary);
-            // Now that all market data has been loaded, load all account info
+            $scope.marketSummaries = angular.copy(response);
             getWallets();
-        }
+        });
     }
+
     // Creates all the wallets for the wallet holder, as well as the current market values
     function getWallets(){ 
         loadedAccounts = 0;
@@ -192,45 +91,24 @@ app.controller('mainController', function ($scope, Settings){
     function getMarketValues(){
         var usdValue = 0;
         var totalBtcValue = 0;
-        var btcValue = 0;
         var tickersToRemove = []; // Keep a list of tickers that are practically worthless, so we can remove them
         for(var i=0; i<$scope.marketSummaries.length; ++i){
-            // Get the base and market ticker
-            var baseTicker = $scope.marketSummaries[i].MarketName.split('-')[0];
-            var marketTicker = $scope.marketSummaries[i].MarketName.split('-')[1];
+            var marketTicker = $scope.marketSummaries[i].symbol;
             
-            // If this is a BTC market, get the BTC value 
-            if(baseTicker === 'BTC'){
-                if($scope.walletHolder[marketTicker] !== undefined){
-                    $scope.walletHolder[marketTicker].btcValue = $scope.marketSummaries[i].Last * $scope.walletHolder[marketTicker].quantity;
-                    $scope.walletHolder[marketTicker].btcMarketValue = $scope.marketSummaries[i].Last;
-                }
-            } else if(baseTicker === 'USDT' && marketTicker === 'BTC'){
-                btcValue = $scope.marketSummaries[i].Last;
-            }
-        }
-
-        // Now that we have the market prices for all coins, lets calculat ethe USD value for all coins
-        for(var j=0; j<$scope.walletHolder.allTickers.length; ++j){
-            // If the coin is not BTC we have to convert to BTC, then to USD
-            if($scope.walletHolder.allTickers[j] !== 'BTC'){
-                $scope.walletHolder[$scope.walletHolder.allTickers[j]].usdValue = Math.round($scope.walletHolder[$scope.walletHolder.allTickers[j]].btcValue * btcValue * 100) / 100;
-                $scope.walletHolder[$scope.walletHolder.allTickers[j]].usdMarketValue = Math.round($scope.walletHolder[$scope.walletHolder.allTickers[j]].btcMarketValue * btcValue * 100) / 100;
-                if($scope.walletHolder[$scope.walletHolder.allTickers[j]].usdValue < 0.5)
-                {
+            if($scope.walletHolder[marketTicker] !== undefined){
+                $scope.walletHolder[marketTicker].total_usd = $scope.marketSummaries[i].price_usd * $scope.walletHolder[marketTicker].quantity;
+                $scope.walletHolder[marketTicker].price_usd = $scope.marketSummaries[i].price_usd;
+                $scope.walletHolder[marketTicker].total_btc = $scope.marketSummaries[i].price_btc * $scope.walletHolder[marketTicker].quantity;
+                $scope.walletHolder[marketTicker].price_btc = $scope.marketSummaries[i].price_btc;
+                if($scope.walletHolder[marketTicker].total_usd > 0.5){
+                    totalBtcValue += $scope.walletHolder[marketTicker].total_btc;
+                    usdValue += $scope.walletHolder[marketTicker].total_usd;
+                } else {
                     $scope.walletHolder[$scope.walletHolder.allTickers[j]] = undefined;
                     tickersToRemove.push(j);
-                } else {
-                    usdValue += $scope.walletHolder[$scope.walletHolder.allTickers[j]].usdValue;
-                    totalBtcValue += $scope.walletHolder[$scope.walletHolder.allTickers[j]].btcValue;
                 }
-            } else {
-                $scope.walletHolder['BTC'].btcValue =  $scope.walletHolder['BTC'].quantity;
-                $scope.walletHolder['BTC'].usdValue =  Math.round($scope.walletHolder['BTC'].btcValue * btcValue * 100) / 100;
-                $scope.walletHolder['BTC'].usdMarketValue = Math.round(btcValue * 100) / 100;
-                usdValue += $scope.walletHolder['BTC'].usdValue;
-                totalBtcValue+= $scope.walletHolder['BTC'].btcValue;
             }
+            
         }
 
         //remove any coins that are worth little to nothing.
@@ -279,5 +157,5 @@ app.controller('mainController', function ($scope, Settings){
 
     setInterval(function(){
         getAllMarkets()
-    }, 30000)
+    }, 300000)
 });

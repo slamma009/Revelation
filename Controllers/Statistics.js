@@ -41,7 +41,7 @@ function statisticsController($scope){
 
     function calculateValuable(){
         $scope.MostValuableCoins = angular.copy($scope.allCoins).sort(function(a, b){
-            return b.wallet.usdMarketValue - a.wallet.usdMarketValue;
+            return b.wallet.price_usd - a.wallet.price_usd;
         });
     }
 
@@ -59,7 +59,7 @@ function statisticsController($scope){
                 for(var i=0; i<$scope.allCoins.length; ++i){
                     if($scope.allCoins[i].ticker === properties[0])
                     {
-                        var gain = $scope.walletHolder[properties[0]].usdMarketValue - response[properties[0]].USD;
+                        var gain = $scope.walletHolder[properties[0]].price_usd - response[properties[0]].USD;
                         gain = (gain / response[properties[0]].USD) * 100;
                         if(days === 30){
                             $scope.month.timestamp = timestamp;
@@ -87,7 +87,7 @@ function statisticsController($scope){
             });
         } else {
             if(days === 30) { 
-                var gain = $scope.walletHolder[ticker].usdMarketValue - $scope.month[ticker];
+                var gain = $scope.walletHolder[ticker].price_usd - $scope.month[ticker];
                 gain = (gain / $scope.month[ticker]) * 100;
                 for(var i=0; i<$scope.allCoins.length; ++i){
                     if($scope.allCoins[i].ticker === ticker)
@@ -98,7 +98,7 @@ function statisticsController($scope){
                 }
                 calculateMonthlyGains();
             } else if(days === 7) {
-                var gain = $scope.walletHolder[ticker].usdMarketValue - $scope.week[ticker];
+                var gain = $scope.walletHolder[ticker].price_usd - $scope.week[ticker];
                 gain = (gain / $scope.week[ticker]) * 100;
                 for(var i=0; i<$scope.allCoins.length; ++i){
                     if($scope.allCoins[i].ticker === ticker)
@@ -109,7 +109,7 @@ function statisticsController($scope){
                 }
                 calculateWeeklyGains();
             } else if(days === 1){
-                var gain = $scope.walletHolder[ticker].usdMarketValue - $scope.day[ticker];
+                var gain = $scope.walletHolder[ticker].price_usd - $scope.day[ticker];
                 gain = (gain / $scope.day[ticker]) * 100;
                 for(var i=0; i<$scope.allCoins.length; ++i){
                     if($scope.allCoins[i].ticker === ticker)

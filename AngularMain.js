@@ -99,31 +99,34 @@ app.controller('mainController', function ($scope, $window, Settings){
         var totalString = 'total_' + $scope.tickerToShow.toLowerCase();
         var usdValue = 0;
         var totalCurrencyValue = 0;
-        var tickersToRemove = []; // Keep a list of tickers that are practically worthless, so we can remove them
+        var tickersChecked = [];
         for(var i=0; i<$scope.marketSummaries.length; ++i){
             var marketTicker = $scope.marketSummaries[i].symbol;
             
             if($scope.walletHolder[marketTicker] !== undefined){
-                $scope.walletHolder[marketTicker][totalString] = $scope.marketSummaries[i][priceString] * $scope.walletHolder[marketTicker].quantity;
-                $scope.walletHolder[marketTicker][priceString] = $scope.marketSummaries[i][priceString];
-                $scope.walletHolder[marketTicker].total_usd = $scope.marketSummaries[i].price_usd * $scope.walletHolder[marketTicker].quantity;
-                $scope.walletHolder[marketTicker].price_usd = $scope.marketSummaries[i].price_usd;
-                $scope.walletHolder[marketTicker].total_btc = $scope.marketSummaries[i].price_btc * $scope.walletHolder[marketTicker].quantity;
-                $scope.walletHolder[marketTicker].price_btc = $scope.marketSummaries[i].price_btc;
-                if($scope.walletHolder[marketTicker].total_usd > 0.5){
-                    totalCurrencyValue += $scope.walletHolder[marketTicker][totalString];
-                    usdValue += $scope.walletHolder[marketTicker].total_usd;
-                } else {
-                    $scope.walletHolder[$scope.walletHolder.allTickers[j]] = undefined;
-                    tickersToRemove.push(j);
+                if(tickersChecked.indexOf(marketTicker) < 0){
+                    tickersChecked.push(marketTicker);
+                    $scope.walletHolder[marketTicker][totalString] = $scope.marketSummaries[i][priceString] * $scope.walletHolder[marketTicker].quantity;
+                    $scope.walletHolder[marketTicker][priceString] = $scope.marketSummaries[i][priceString];
+                    $scope.walletHolder[marketTicker].total_usd = $scope.marketSummaries[i].price_usd * $scope.walletHolder[marketTicker].quantity;
+                    $scope.walletHolder[marketTicker].price_usd = $scope.marketSummaries[i].price_usd;
+                    $scope.walletHolder[marketTicker].total_btc = $scope.marketSummaries[i].price_btc * $scope.walletHolder[marketTicker].quantity;
+                    $scope.walletHolder[marketTicker].price_btc = $scope.marketSummaries[i].price_btc;
+                    if($scope.walletHolder[marketTicker].total_usd > 0.5){
+                        totalCurrencyValue += $scope.walletHolder[marketTicker][totalString];
+                        usdValue += $scope.walletHolder[marketTicker].total_usd;
+                    } else {
+                        $scope.walletHolder[marketTicker] = undefined;
+                        var index = $scope.walletHolder.allTickers.indexOf(marketTicker);
+                        if(index >= 0){
+                            $scope.walletHolder.allTickers.splice(index, 1);
+                        } else {
+                            alert("Error");
+                        }
+                    }
                 }
             }
             
-        }
-
-        //remove any coins that are worth little to nothing.
-        for(var i=tickersToRemove.length - 1; i >= 0; --i){
-            $scope.walletHolder.allTickers.splice(tickersToRemove[i], 1);
         }
         
         var $target = $("#usdDisplay");

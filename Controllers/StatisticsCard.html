@@ -4,11 +4,12 @@
         <div class='col-xs-2'>
             {{$index + 1}}.
         </div>
-        <div class='col-xs-4'>
+        <div class='col-xs-3'>
             {{coin.ticker}} 
         </div>
-        <div class='col-xs-6' ng-if="cardType === 'coinValue'">
-            {{coin.wallet.price_usd | currency : $ : 2}}
+        <div class='col-xs-7' ng-if="cardType === 'coinValue'">
+            <span ng-if='Currencies[tickerToShow] !== undefined' ng-bind-html="Currencies[tickerToShow] | unsafe"></span>
+            <span>{{coin.wallet['price_' + tickerToShow.toLowerCase()] | number :  Currencies[tickerToShow] !== undefined ? 2 : 8}}</span>
         </div>
         <div class='col-xs-6' ng-class="{'muted-green': coin.gains > 0, 'muted-red': coin.gains < 0}" ng-if="cardType === 'coinGains'">
             {{coin.gains}} %

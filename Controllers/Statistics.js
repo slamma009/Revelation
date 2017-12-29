@@ -9,7 +9,7 @@ angular.module('revelation')
     };
 });
 
-function statisticsController($scope){
+function statisticsController($scope, Settings){
   
     $scope.allCoins = [];
     $scope.MostValuableCoins = [];
@@ -41,7 +41,7 @@ function statisticsController($scope){
 
     function calculateValuable(){
         $scope.MostValuableCoins = angular.copy($scope.allCoins).sort(function(a, b){
-            return b.wallet.price_usd - a.wallet.price_usd;
+            return b.wallet['price_' + $scope.tickerToShow] - a.wallet['price_' + $scope.tickerToShow];
         });
     }
 
@@ -173,4 +173,9 @@ function statisticsController($scope){
     }
 
   
+    $scope.$watch(function(){
+        return Settings.tickerToShow;
+    }, function(newValue, oldValue){
+        $scope.tickerToShow = newValue.toLowerCase();
+    });
 }

@@ -12,7 +12,8 @@ angular.module('revelation')
   };
 });
 
-function statisticsCardController($scope){
+function statisticsCardController($scope, $window, Settings){
+    $scope.Currencies = $window.Currencies;
     $scope.pageNumber = 0;
 
     $scope.changePage = function(value){
@@ -27,4 +28,9 @@ function statisticsCardController($scope){
         }
         return input;
     };
+    $scope.$watch(function(){
+        return Settings.tickerToShow;
+    }, function(newValue, oldValue){
+        $scope.tickerToShow = newValue;
+    });
 }

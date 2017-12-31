@@ -112,6 +112,10 @@ app.controller('mainController', function ($scope, $window, Settings){
                     $scope.walletHolder[marketTicker].price_usd = $scope.marketSummaries[i].price_usd;
                     $scope.walletHolder[marketTicker].total_btc = $scope.marketSummaries[i].price_btc * $scope.walletHolder[marketTicker].quantity;
                     $scope.walletHolder[marketTicker].price_btc = $scope.marketSummaries[i].price_btc;
+
+                    $scope.walletHolder[marketTicker].percent_change_1h = $scope.marketSummaries[i].percent_change_1h;
+                    $scope.walletHolder[marketTicker].percent_change_24h = $scope.marketSummaries[i].percent_change_24h;
+                    $scope.walletHolder[marketTicker].percent_change_7d = $scope.marketSummaries[i].percent_change_7d;
                     if($scope.walletHolder[marketTicker].total_usd > 0.5){
                         totalCurrencyValue += $scope.walletHolder[marketTicker][totalString];
                         usdValue += $scope.walletHolder[marketTicker].total_usd;
